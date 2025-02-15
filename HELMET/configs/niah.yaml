@@ -1,0 +1,7 @@
+datasets: ruler_niah_s_2
+demo_files: ''
+generation_max_length: 50
+input_max_length: 131072
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+output_dir: output/Llama-3.1-8B-Instruct
+test_files: data/ruler/niah_single_2/validation_131072.jsonl
