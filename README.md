@@ -22,9 +22,9 @@ pip install -r ./HELMET/requirements.txt
 
 ## Dataset \& Model
 
-Dataset for SFT and DPO is avaliable at [here]([yzhuang/Agentic-Long-Context-Understanding-QA](https://huggingface.co/datasets/yzhuang/Agentic-Long-Context-Understanding-QA))
+Dataset for SFT and DPO is avaliable at [here](https://huggingface.co/datasets/yzhuang/Agentic-Long-Context-Understanding-QA)
 
-Model is available at [here]([yzhuang/Llama-3.1-8B-Instruct-AgenticLU](https://huggingface.co/yzhuang/Llama-3.1-8B-Instruct-AgenticLU))
+Model is available at [here](https://huggingface.co/yzhuang/Llama-3.1-8B-Instruct-AgenticLU)
 
 ## Data Generation Pipeline
 
