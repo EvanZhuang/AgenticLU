@@ -22,8 +22,6 @@ from data import (
 import logging
 
 
-
-
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
@@ -88,12 +86,6 @@ def run_test(args, model, dataset, test_file, demo_file):
             
             # it has "context", "question", "answer", "demo" keys
             conversation = [{'role': 'system', 'content': system_prompt}, {'role': 'user', 'content': marked_context + "\n\n" + test_item['question']}]
-            # inputs = tokenize_with_template(conversation, model.tokenizer)
-            # if args.count_tokens:
-            #     metrics["input_len"].append(inputs.input_ids.shape[1])
-            #     continue
-            # output = model.generate(inputs=inputs)
-            # conversation.append({'role': 'assistant', 'content': output['output']})
             # add clarifying question
             conversation.append({'role': 'user', 'content': clarify_question})
             output = model.generate(inputs=tokenize_with_template(conversation, model.tokenizer))
@@ -132,9 +124,6 @@ def run_test(args, model, dataset, test_file, demo_file):
                 logger.info(f"skipping example {idx+1} because the model returned None")
                 continue
 
-            # If we do not use the chat template, then we are doing completion, and for the sake of parsing, we want to prepend the system prompt to the input. 
-            # For example, since we are autocompleting "Answer:"" in the input, then we should prepend the system prompt to the output as well.
-            # This requires some coordination from the dataset preprocessing
             if not args.use_chat_template:
                 prepend_text = data["system_template"].format(**test_item)
                 output["output"] = prepend_text + output["output"]
@@ -254,25 +243,25 @@ def main():
         model.max_length = max_length
         model.generation_max_length = gen_length
 
-        #try: 
-        output_path = run_test(args, model, dataset, test_file, demo_file)
+        try: 
+            output_path = run_test(args, model, dataset, test_file, demo_file)
 
-        if "alce" in dataset and not args.count_tokens and (not os.path.exists(output_path+".score") or args.overwrite):
-            import eval_alce
-            logger.info("running eval_alce.py...")
-            cli_args = ["--f", output_path]
-            if not "nocite" in dataset:
-                cli_args.append("--citations")
-            if "asqa" in dataset:
-                cli_args.append("--mauve")
-            elif "eli5" in dataset:
-                cli_args += ["mauve", "--claims_nli"]
-            eval_alce.main(cli_args)
+            if "alce" in dataset and not args.count_tokens and (not os.path.exists(output_path+".score") or args.overwrite):
+                import eval_alce
+                logger.info("running eval_alce.py...")
+                cli_args = ["--f", output_path]
+                if not "nocite" in dataset:
+                    cli_args.append("--citations")
+                if "asqa" in dataset:
+                    cli_args.append("--mauve")
+                elif "eli5" in dataset:
+                    cli_args += ["mauve", "--claims_nli"]
+                eval_alce.main(cli_args)
 
-        # except Exception as e:
-        #     # in case we run into some kind of error 
-        #     logger.error(f"Error in {dataset}: {e}, continuing...")
-        #     # raise e
+        except Exception as e:
+            # in case we run into some kind of error 
+            logger.error(f"Error in {dataset}: {e}, continuing...")
+            # raise e
 
 if __name__ == "__main__":
     main()

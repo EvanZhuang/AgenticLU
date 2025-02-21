@@ -117,7 +117,7 @@ class Reasoning(BaseModel):
 
 def gpt_answer_check(question, ground_truth, answer):
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant. You help verify if the answers are correct. The prediction might be longer but you will classify it as correct as long as it contains the same semantic meaning as the ground truth."},
             {
@@ -199,13 +199,6 @@ class qa_node:
 
     def sampling_step(self, qa_dataset, data, sampler, tokenizer, system_prompt, sampling_params_context_check, sampling_params_question_answer):
         # gather QA path history
-        # sample_path = self.get_path()
-        # q_path = [qa_node.inter_question for qa_node in sample_path]
-        # a_path = [qa_node.inter_answer for qa_node in sample_path]
-        # conversations = []
-        # for q, a in zip(q_path, a_path):
-        #     conversations.append({"role": "user", "content": q})
-        #     conversations.append({"role": "assistant", "content": a})
         conversations = []
         if self.conversation is not None:
             # ignore the system prompt and the main context
@@ -237,9 +230,6 @@ class qa_node:
         termination_prompts = [chat_template_format(stop_question, tokenizer=tokenizer, system_prompt=local_system_prompt, conversations=conversations + [{"role": "user", "content": omit_context + "\n" + clarify_question}, {"role": "assistant", "content": new_question}, {"role": "user", "content": f"Related context are given:\n {new_context}"}, {"role": "assistant", "content": new_answer}, {"role": "user", "content": "Now, let's answer the final question, be concise in your answer." + data['question']}, {"role": "assistant", "content": final_answer}]) for new_context, new_question, new_answer, final_answer in zip(new_contexts, new_questions, new_answers, final_answers)]
         termination_checks_json = sampler.generate(queries=termination_prompts, sampling_params=sampling_params_context_check)
 
-        # try:
-        #     termination_checks = [json.loads(termination_checks_json[idx].outputs[0].text)['answer'] for idx in range(len(termination_checks_json))]
-        # except:
         termination_checks = [termination_checks_json[idx].outputs[0].text for idx in range(len(termination_checks_json))]
 
         # evaluate the performance
@@ -297,7 +287,6 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(base_model_name)
     tokenizer.pad_token = tokenizer.eos_token
 
-    output_length_sampler = LengthSampler(min_value=32, max_value=64)
     sampling_params = SamplingParams(temperature=1.0, top_p=0.95, n=MAX_SAMPLE_SIZE, max_tokens=512) #best_of=256, stop_token_ids=tokenizer.encode("?", add_special_tokens=False)
     sampling_params_context_check = SamplingParams(temperature=0.2, top_p=0.95, n=1, max_tokens=128) 
     sampling_params_question_answer = SamplingParams(temperature=0.2, top_p=0.95, n=1, max_tokens=1024)
@@ -399,6 +388,7 @@ def main():
 
     # final dataset upload
     dataset_dpo = Dataset.from_dict({"id": ids, "chosen": best_path_json, "rejected": worst_path_json, "score_chosen": best_scores, "score_rejected": worst_scores, "question": questions, "answer": answers, "seq_len": seq_lens})
-
+    dataset_dpo.push_to_hub("YOUR REPO")
+    
 if __name__ == "__main__":
     main()

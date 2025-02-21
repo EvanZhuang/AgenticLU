@@ -32,9 +32,6 @@ def add_prompting(args, data):
         "plan&solve": lambda q: f"{q} Plan your answer and solve the problem. Start your answer with 'Let's first understand the problem and devise a plan to solve the problem, ...', and then solve the problem by saying 'Then let's solve the problem step by step, ...'. End your answer with 'Answer:'.",
     }
 
-    # for data_item in data["data"]:
-    #     data_item["question"] = prompting_methods[args.prompting_method](data_item["question"])
-
     def transform_function(example):
         if "question" not in example:
             raise ValueError("Each data item must contain a 'question' key.")
