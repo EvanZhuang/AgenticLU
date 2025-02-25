@@ -1,5 +1,5 @@
 <h1 align="center"> 📖 Agentic Long Context Understanding 📖 </h1>
-<p align="center"> <b>Self-Taught Agentic Long Context Understanding</b>  (<a href="https://arxiv.org/abs/TBD"> Arxiv </a>). 
+<p align="center"> <b>Self-Taught Agentic Long Context Understanding</b>  (<a href="https://arxiv.org/abs/2502.15920">Arxiv</a>). 
 </p>
 
 <p align="center">
@@ -61,3 +61,18 @@ Examples for inferencing with the agentic workflow can be found [here](HELMET/sc
 ## Questions?
 
 If you have any questions related to the code or the paper, feel free to reach out to us at y5zhuang@ucsd.edu.
+
+## Citation
+
+If you find our paper and code useful, please cite us:
+```r
+@misc{zhuang2025selftaughtagenticlongcontext,
+      title={Self-Taught Agentic Long Context Understanding}, 
+      author={Yufan Zhuang and Xiaodong Yu and Jialian Wu and Ximeng Sun and Ze Wang and Jiang Liu and Yusheng Su and Jingbo Shang and Zicheng Liu and Emad Barsoum},
+      year={2025},
+      eprint={2502.15920},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2502.15920}, 
+}
+```
