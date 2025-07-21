@@ -1,5 +1,5 @@
 <h1 align="center"> 📖 Agentic Long Context Understanding 📖 </h1>
-<p align="center"> <b>Self-Taught Agentic Long Context Understanding</b>  (<a href="https://arxiv.org/abs/2502.15920">ACL 25</a>). 
+<p align="center"> <b>Self-Taught Agentic Long Context Understanding</b>  (<a href="https://arxiv.org/abs/2502.15920">ACL 2025</a>). 
 </p>
 
 <p align="center">
